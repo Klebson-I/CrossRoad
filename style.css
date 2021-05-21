@@ -1,0 +1,134 @@
+*,
+*::after,
+*::before{
+    margin: 0;
+    box-sizing: inherit;
+    padding: 0;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    
+}
+.street{
+    background-image: url('./street.png');
+    width: 1024px;
+    height: 678px;
+    position: relative;
+    overflow: hidden;
+}
+.light1{
+    position: absolute;
+    top:100%;
+    left: 30%;
+    transform: translateY(-60%);
+    
+    width: 256px;
+    height: 256px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+   
+}
+.light2{
+    position: absolute;
+    top:60%;
+    left: 24%;
+    transform: translateY(-60%);
+    
+    width: 256px;
+    height: 256px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+.light3{
+    position: absolute;
+    top:65%;
+    left: 54%;
+    transform: translateY(-60%);
+    
+    width: 256px;
+    height: 256px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+.lightRed{
+    background-image: url('./trafficlights-red.png');
+}
+.lightGreen{
+    background-image: url('./trafficlights-green.png');
+}
+.car{
+    position: absolute;
+    background-image: url(./car.png);
+    width: 56px;
+    height: 100px;
+}
+.signPostRight{
+    background-image: url('./car-right.png');
+}
+.signPostLeft{
+    background-image: url('./car-left.png');
+}
+
+.down-left{
+    left: 0%;
+    top: 83%;
+    transform: translateX(-150%) rotateZ(-90deg);
+}
+
+.up{
+    left: 41%;
+    top: 0%;
+    transform: translateY(-100%);
+}
+
+.down-right{
+    left: 100%;
+    top: 65%;
+    transform: translateX(+100%) rotateZ(90deg);
+}
+
+.stopLine1{
+    position: absolute;
+    left:35%;
+    top:85%;
+    width: 2px;
+    height: 80px;
+    background-color: white;
+}
+.stopLine2{
+    position: absolute;
+    left:63%;
+    top:65%;
+    width: 2px;
+    height: 80px;
+    background-color: white;
+}
+.stopLine3{
+    width: 80px;
+    height: 2px;
+    position: absolute;
+    left:38%;
+    top:60%;
+    background-color: white;
+}
+.toggle{
+    width: 30px;
+    height: 50px;
+    cursor: pointer;
+    transform: translate(-50%,-30%);
+}
