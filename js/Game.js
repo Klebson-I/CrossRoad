@@ -234,7 +234,28 @@ class Game{
             }
         },10)
     }
-    //2c1
+    
+    Animation2c1(car){
+        const interval=setInterval(()=>{
+            if(car.position.top<Ui.line3.offsetTop-110*car.carIndex-Ui.line3.offsetHeight){
+                car.element.style.top=car.position.top+1+'px';
+                car.getPositionHorizontal();
+            }
+            else if(car.carIndex==0){
+                clearInterval(interval);
+
+                if(car.destination=='left'){
+                    this.Animation2c2(car);
+                }
+                if(car.destination=='right'){
+                    this.Animation2c3(car);
+                }
+                
+            }
+        },10)
+    }
+    //2c2
+   
     
 
 }
