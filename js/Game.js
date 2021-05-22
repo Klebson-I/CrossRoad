@@ -120,6 +120,7 @@ class Game{
         var toggle=false;
         var angle=-90;
         var moveLittleCounter=0;
+        var intervalSets=false;
 
         const interval=setInterval(()=>{
             if((car.position.left>Ui.line1.offsetLeft||car.light.isRed==false)&&car.position.top>=Ui.line3.offsetTop){
@@ -130,23 +131,27 @@ class Game{
                         car.carIndex--;
                     })
                 }
-                const moveLittle=setInterval(()=>{
-                    if(moveLittleCounter<20){
-                        car.element.style.left=car.position.left+1+'px';
-                        car.getPositionHorizontal();
-                        moveLittleCounter++;
-                    }
-                    else{
-                        clearInterval(moveLittle);
-                    }
-                },10)
 
-                if(moveLittleCounter>=20){
-                    car.element.style.left=car.position.left+1+'px';
+                if(intervalSets==false){
+                    intervalSets=true;
+                    const moveLittle=setInterval(()=>{
+                        if(moveLittleCounter<100){
+                            car.element.style.left=car.position.left+1+'px';
+                            car.getPositionHorizontal();
+                            moveLittleCounter++;
+                        }
+                        else{
+                            clearInterval(moveLittle);
+                        }
+                    },10)
+                }
+
+                if(moveLittleCounter>=100){
+                    car.element.style.left=car.position.left+1.1+'px';
                     car.element.style.top=car.position.top-1+'px';
-                    car.element.style.transform=`rotateZ(${angle}deg)`;
-                    car.getPositionHorizontal();
                     angle-=0.58;
+                    car.element.style.transform=`translateX(-150%) rotateZ(${angle}deg)`;
+                    car.getPositionHorizontal();
                 }
                 
             }
@@ -195,6 +200,8 @@ class Game{
     Animation3c2(car){
         var toggle=false;
         var angle=90;
+        var intervalSets=false;
+        var moveLittleCounter=0;
         const interval=setInterval(()=>{
             if((car.position.left<Ui.line2.offsetLeft-car.elementWidth/2||car.light.isRed==false)&&car.position.top>=Ui.line3.offsetTop-car.elementHeight/2){
 
@@ -206,11 +213,28 @@ class Game{
                     })
                     console.log(this.lane3);
                 }
-                car.element.style.left=car.position.left-1+'px';
-                car.element.style.top=car.position.top-1+'px';
-                car.element.style.transform=`rotateZ(${angle}deg)`
-                angle+=1.07;
-                car.getPositionHorizontal();
+
+                if(intervalSets==false){
+                    intervalSets=true;
+                    const moveLittleInterval=setInterval(()=>{
+                        if(moveLittleCounter<70){
+                            moveLittleCounter++;
+                            car.element.style.left=car.position.left-1+'px';
+                            car.getPositionHorizontal();
+                        }
+                        else{
+                            clearInterval(moveLittleInterval);
+                        }
+                    },10)
+                }
+
+                if(moveLittleCounter>=70){
+                    car.element.style.left=car.position.left-0.9+'px';
+                    car.element.style.top=car.position.top-1+'px';
+                    car.element.style.transform=`translateX(+100%) rotateZ(${angle}deg)`
+                    angle+=1.07;
+                    car.getPositionHorizontal();
+                }
             }
             else if(car.position.top<=Ui.line3.offsetTop){
                 clearInterval(interval);
@@ -268,8 +292,9 @@ class Game{
         var toggle=false;
         var angle=0;
         var moveLittleCounter=0;
+        var intervalSets=false;
         const interval=setInterval(()=>{
-            if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.street.offsetHeight-car.elementHeight-20){
+            if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.street.offsetHeight-20){
                 if(toggle==false){
                     toggle=true;
                     this.lane2.shift();
@@ -278,21 +303,27 @@ class Game{
                     })
                 }
 
-                const interval2=setInterval(()=>{
-                    if(moveLittleCounter<=50){
-                        car.element.style.top=car.position.top+1+'px';
-                        car.getPositionHorizontal();
-                        moveLittleCounter++;
-                    }
-                    else{
-                        clearInterval(interval2);
-                    }
-                },10)
-                if(moveLittleCounter>=50){
+                if(intervalSets==false){
+                    intervalSets=true;
+                    const interval2=setInterval(()=>{
+                        if(moveLittleCounter<=150){
+                            car.element.style.top=car.position.top+1+'px';
+                            car.getPositionHorizontal();
+                            moveLittleCounter++;
+                        }
+                        else{
+                            clearInterval(interval2);
+                        }
+                    },10)
+                }
+                
+
+
+                if(moveLittleCounter>=150){
                     car.element.style.left=car.position.left+1+'px';
                     car.element.style.top=car.position.top+1+'px';
                     if(angle>=-90){
-                    car.element.style.transform=`rotateZ(${angle}deg)`
+                    car.element.style.transform=`translateY(-100%) rotateZ(${angle}deg)`
                     angle-=1;
                     }
                     car.getPositionHorizontal();
@@ -309,10 +340,12 @@ class Game{
     Animation2c3(car){
         var toggle=false;
         var angle=0;
+        var moveLittleCounter=0;
+        var intervalSets=false;
 
         const interval=setInterval(()=>{
 
-            if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.line3.offsetTop+50){
+            if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.line3.offsetTop+140){
                 if(toggle==false){
                     toggle=true;
                     this.lane2.shift();
@@ -321,13 +354,31 @@ class Game{
                     })
                 }
 
-                car.element.style.left=car.position.left-1+'px';
-                car.element.style.top=car.position.top+1+'px';
-                car.element.style.transform=`rotateZ(${angle}deg)`
-                angle+=1.73;
-                car.getPositionHorizontal();
+                if(intervalSets==false){
+
+                    intervalSets=true;
+                    const moveLittleInterval=setInterval(()=>{
+                        if(moveLittleCounter<60){
+                            moveLittleCounter++;
+                            car.element.style.top=car.position.top+1+'px';
+                            car.getPositionHorizontal();
+                        }
+                        else{
+                            clearInterval(moveLittleInterval);
+                        }
+                    },10)
+                }
+
+                if(moveLittleCounter>=60){
+                    car.element.style.left=car.position.left-1+'px';
+                    car.element.style.top=car.position.top+1+'px';
+                    car.element.style.transform=`translateY(-100%) rotateZ(${angle}deg)`
+                    angle+=1.1;
+                    car.getPositionHorizontal();
+                }
+                
             }
-            else if(car.position.top>Ui.line3.offsetTop){
+            else if(car.position.top>Ui.line3.offsetTop+140){
                 clearInterval(interval);
                 car.removeSignPost();
                 this.Animation3c3(car);
