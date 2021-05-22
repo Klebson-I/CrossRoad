@@ -54,6 +54,12 @@ export class Car{
         }
     }
 
+    removeSignPost(){
+        clearInterval(this.signpostInterval);
+        if(this.element.classList.contains('signPostLeft'))this.element.classList.remove('signPostLeft');
+        if(this.element.classList.contains('signPostRight'))this.element.classList.remove('signPostRight');
+    }
+
     addClasses(){
         if(this.startX){
             this.element.classList.add(`${this.startY}-${this.startX}`);

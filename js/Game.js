@@ -152,6 +152,7 @@ class Game{
             }
             else if(car.position.top<=Ui.line2.offsetTop){
                 clearInterval(interval);
+                car.removeSignPost();
                 this.Animation1c4(car);
             }
            
@@ -213,6 +214,7 @@ class Game{
             }
             else if(car.position.top<=Ui.line3.offsetTop){
                 clearInterval(interval);
+                car.removeSignPost();
                 this.Animation1c4(car);//
             }
         },10)
@@ -298,6 +300,7 @@ class Game{
             }
             else if(car.position.top>Ui.line3.offsetTop){
                 clearInterval(interval);
+                car.removeSignPost();
                 this.Animation1c2(car);
             }
         },10)
@@ -326,6 +329,7 @@ class Game{
             }
             else if(car.position.top>Ui.line3.offsetTop){
                 clearInterval(interval);
+                car.removeSignPost();
                 this.Animation3c3(car);
             }
         },10)
