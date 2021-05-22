@@ -99,7 +99,7 @@ class Game{
         const interval=setInterval(()=>{
             if((car.position.left>Ui.line1.offsetLeft||car.light.isRed==false)&&car.position.left<=Ui.street.offsetWidth){
 
-                if(toggle==false){
+                if(toggle==false&&car.destination=='straight'){
                     toggle=true;
                     this.lane1.shift();
                     this.lane1.forEach((car)=>{
@@ -117,7 +117,6 @@ class Game{
     }
     //1c3
     Animation1c3(car){
-
         var toggle=false;
         var angle=-90;
         var moveLittleCounter=0;
@@ -140,7 +139,7 @@ class Game{
                     else{
                         clearInterval(moveLittle);
                     }
-                },5)
+                },10)
 
                 if(moveLittleCounter>=20){
                     car.element.style.left=car.position.left+1+'px';
@@ -224,7 +223,7 @@ class Game{
         const interval=setInterval(()=>{
             if((car.position.left<Ui.line2.offsetLeft-car.elementWidth/2||car.light.isRed==false)&&car.position.left>=0){
 
-                if(toggle==false){
+                if(toggle==false&&car.destination=='straight'){
                     toggle=true;
                     this.lane3.shift();
                     this.lane3.forEach((car)=>{

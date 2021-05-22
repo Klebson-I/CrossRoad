@@ -12,10 +12,6 @@ export class Car{
         this.street=Ui.street;
         this.signpostInterval=null;
         
-        
-
-        
-
         this.position={
             left:null,
             right:null,
@@ -38,12 +34,7 @@ export class Car{
     }
 
     getStartPosition(){
-        if(!this.startX){
-            this.getPositionVertical();
-        }
-        else{
-            this.getPositionHorizontal();
-        }
+        this.getPositionHorizontal();
     }
 
     appendCar(){
@@ -72,13 +63,6 @@ export class Car{
             this.element.classList.add(`${this.startY}`);
             this.element.classList.add(`direction-${this.destination}`);
         }
-    }
-
-    getPositionVertical(){
-        this.position.top=this.element.offsetTop;
-        this.position.bottom=this.element.offsetTop+this.elementHeight;
-        this.position.left=this.element.offsetLeft;
-        this.position.right=this.element.offsetLeft+this.elementWidth;
     }
 
     getPositionHorizontal(){

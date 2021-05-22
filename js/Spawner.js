@@ -1,5 +1,4 @@
 import { Car } from "./Car.js";
-import { Ui } from "./UiSelectors.js";
 import {carListDownLeft,carListDownRight,carListUp} from './CarList.js';
 
 export class Spawner{
@@ -70,20 +69,20 @@ export class Spawner{
         
 
         if(this.startX==='left'){
-            if(carListDownLeft.length<3){
+            if(carListDownLeft.length<5){
                 carListDownLeft.push(carDiv);
                 return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
             }
             
         }
         if(this.startX==='right'){
-            if(carListDownRight.length<3){
+            if(carListDownRight.length<5){
                 carListDownRight.push(carDiv);
                 return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
             }
         }
         if(this.startX===0){
-            if(carListUp.length<3){
+            if(carListUp.length<5){
                 carListUp.push(carDiv);
                 return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
             }
