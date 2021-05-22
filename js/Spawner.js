@@ -70,16 +70,24 @@ export class Spawner{
         
 
         if(this.startX==='left'){
-            carListDownLeft.push(carDiv);
+            if(carListDownLeft.length<3){
+                carListDownLeft.push(carDiv);
+                return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+            }
+            
         }
         if(this.startX==='right'){
-            carListDownRight.push(carDiv);
+            if(carListDownRight.length<3){
+                carListDownRight.push(carDiv);
+                return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+            }
         }
         if(this.startX===0){
-            carListUp.push(carDiv);
+            if(carListUp.length<3){
+                carListUp.push(carDiv);
+                return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+            }
         }
-
-        return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
     }
 
     getRandomNumber(){

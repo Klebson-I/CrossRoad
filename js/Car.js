@@ -89,6 +89,15 @@ export class Car{
     }
 
     removeElement(){
+        if(this.startX=='left'){
+            carListDownLeft.pop();
+        }
+        if(this.startX=='right'){
+            carListDownRight.pop();
+        }
+        if(this.startX==0){
+            carListUp.pop();
+        }
         this.element.remove();
     }
 }

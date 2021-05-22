@@ -5,6 +5,7 @@ import{Spawner} from './Spawner.js';
 
 
 
+
 class Game{
 
     constructor(){
@@ -32,7 +33,9 @@ class Game{
 
     getCar(){
         const car=this.spawner.createCar();
-        this.segregateCar(car);
+        if(car){
+            this.segregateCar(car);
+        }
     }
 
     segregateCar(car){
@@ -65,7 +68,7 @@ class Game{
         if(car.startX=='right'&&car.startY=='down'&&car.destination=='right'){
             this.Animation3c1(car);
         }
-        if(car.startY='up'){
+        if(car.startY=='up'){
             this.Animation2c1(car);
         }
     }
@@ -170,6 +173,8 @@ class Game{
     }
     //3c1
     Animation3c1(car){
+        console.log(car.carIndex);
+        console.log(this.lane3);
         const interval=setInterval(()=>{
             if(car.position.left>Ui.line2.offsetLeft+110*car.carIndex-car.elementWidth/2){
                 car.element.style.left=car.position.left-1+'px';
@@ -199,6 +204,7 @@ class Game{
                     this.lane3.forEach((car)=>{
                         car.carIndex--;
                     })
+                    console.log(this.lane3);
                 }
                 car.element.style.left=car.position.left-1+'px';
                 car.element.style.top=car.position.top-1+'px';
@@ -224,7 +230,9 @@ class Game{
                     this.lane3.forEach((car)=>{
                         car.carIndex--;
                     })
+                    console.log(this.lane3);
                 }
+
                 car.element.style.left=car.position.left-1+'px';
                 car.getPositionHorizontal();
             }
@@ -234,7 +242,7 @@ class Game{
             }
         },10)
     }
-    
+
     Animation2c1(car){
         const interval=setInterval(()=>{
             if(car.position.top<Ui.line3.offsetTop-110*car.carIndex-Ui.line3.offsetHeight){
@@ -255,7 +263,74 @@ class Game{
         },10)
     }
     //2c2
-   
+    Animation2c2(car){
+        var toggle=false;
+        var angle=0;
+        var moveLittleCounter=0;
+        const interval=setInterval(()=>{
+            if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.street.offsetHeight-car.elementHeight-20){
+                if(toggle==false){
+                    toggle=true;
+                    this.lane2.shift();
+                    this.lane2.forEach((car)=>{
+                        car.carIndex--;
+                    })
+                }
+
+                const interval2=setInterval(()=>{
+                    if(moveLittleCounter<=50){
+                        car.element.style.top=car.position.top+1+'px';
+                        car.getPositionHorizontal();
+                        moveLittleCounter++;
+                    }
+                    else{
+                        clearInterval(interval2);
+                    }
+                },10)
+                if(moveLittleCounter>=50){
+                    car.element.style.left=car.position.left+1+'px';
+                    car.element.style.top=car.position.top+1+'px';
+                    if(angle>=-90){
+                    car.element.style.transform=`rotateZ(${angle}deg)`
+                    angle-=1;
+                    }
+                    car.getPositionHorizontal();
+                }
+            }
+            else if(car.position.top>Ui.line3.offsetTop){
+                clearInterval(interval);
+                this.Animation1c2(car);
+            }
+        },10)
+    }
+    //2c3
+    Animation2c3(car){
+        var toggle=false;
+        var angle=0;
+
+        const interval=setInterval(()=>{
+
+            if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.line3.offsetTop+50){
+                if(toggle==false){
+                    toggle=true;
+                    this.lane2.shift();
+                    this.lane2.forEach((car)=>{
+                        car.carIndex--;
+                    })
+                }
+
+                car.element.style.left=car.position.left-1+'px';
+                car.element.style.top=car.position.top+1+'px';
+                car.element.style.transform=`rotateZ(${angle}deg)`
+                angle+=1.73;
+                car.getPositionHorizontal();
+            }
+            else if(car.position.top>Ui.line3.offsetTop){
+                clearInterval(interval);
+                this.Animation3c3(car);
+            }
+        },10)
+    }
     
 
 }
