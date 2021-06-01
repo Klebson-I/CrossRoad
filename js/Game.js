@@ -1,7 +1,8 @@
 import {Ui} from './UiSelectors.js';
 import{Light} from './Light.js';
 import{Spawner} from './Spawner.js';
-
+import {lane,CrossRoad} from './CarList.js';
+import {Pilot} from './Pilot.js';
 
 
 
@@ -14,9 +15,11 @@ class Game{
         this.light1=null;
         this.light2=null;
         this.light3=null;
-        this.lane1=[];
-        this.lane2=[];
-        this.lane3=[];
+        
+        this.intervalRespawn=null;
+
+        this.simulationButton=Ui.simulationButton;
+        this.pilot=null;
     }
 
     init(){
@@ -25,8 +28,22 @@ class Game{
         this.light2=new Light(Ui.light2,Ui.line2Toggle);
         this.light3=new Light(Ui.light3,Ui.line3Toggle);
         this.spawner=new Spawner(this.light1,this.light2,this.light3);
+        this.pilot=new Pilot(this.light1,this.light2,this.light3);
+        this.setGameIntervals();
+        this.addListeners();
 
-        const interval=setInterval(()=>{
+    }
+
+    addListeners(){
+        this.simulationButton.addEventListener('click',()=>{
+            this.simulationButton.classList.toggle('simulationModeButton-clicked');
+            this.pilot.isTrue=!this.pilot.isTrue;
+            if(this.pilot.isTrue===true)this.pilot.simulate();
+        })
+    }
+
+    setGameIntervals(){
+        this.intervalRespawn=setInterval(()=>{
             this.getCar();
         },2000)
     }
@@ -40,20 +57,21 @@ class Game{
 
     segregateCar(car){
         if(car.startX=='left'&&car.startY=='down'){
-            this.lane1.push(car);
-            car.carIndex=this.lane1.length-1;
+            lane[0].push(car);
+            car.carIndex=lane[0].length-1;
         }
         if(car.startX=='right'&&car.startY=='down'){
-            this.lane3.push(car);
-            car.carIndex=this.lane3.length-1;
+            lane[2].push(car);
+            car.carIndex=lane[2].length-1;
         }
         if(car.startY=='up'){
-            this.lane2.push(car);
-            car.carIndex=this.lane2.length-1;
+            lane[1].push(car);
+            car.carIndex=lane[1].length-1;
         }
-
         this.setAnimation(car);
     }
+
+    
 
     setAnimation(car){
         if(car.startX=='left'&&car.startY=='down'&&car.destination=='straight'){
@@ -75,14 +93,14 @@ class Game{
 
     //1c1
     Animation1c1(car){
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
             if(car.position.left<Ui.line1.offsetLeft-110*car.carIndex){
                 car.element.style.left=car.position.left+1+'px';
                 car.getPositionHorizontal();
             }
             else if(car.carIndex==0){
-                clearInterval(interval);
-
+                clearInterval(car.interval);
+                car.isWaiting=true;
                 if(car.destination=='straight'){
                     this.Animation1c2(car);
                 }
@@ -96,21 +114,33 @@ class Game{
     //1c2
     Animation1c2(car){
         var toggle=false;
-        const interval=setInterval(()=>{
-            if((car.position.left>Ui.line1.offsetLeft||car.light.isRed==false)&&car.position.left<=Ui.street.offsetWidth){
+        
 
+        car.interval=setInterval(()=>{
+            if((car.position.left>Ui.line1.offsetLeft||car.light.isRed==false)&&car.position.left<=Ui.street.offsetWidth){
+                
                 if(toggle==false&&car.destination=='straight'){
                     toggle=true;
-                    this.lane1.shift();
-                    this.lane1.forEach((car)=>{
+                    lane[0].shift();
+                    lane[0].forEach((car)=>{
                         car.carIndex--;
                     })
+                    CrossRoad.down_left_straight.push(car);
+                    car.isWaiting=false;
+
+                    setTimeout(()=>{
+                        CrossRoad.down_left_straight.pop();
+                    },3000)
                 }
                 car.element.style.left=car.position.left+1+'px';
                 car.getPositionHorizontal();
+
+                
+                
             }
             else if(car.position.left>=Ui.street.offsetWidth){
-                clearInterval(interval);
+                
+                clearInterval(car.interval);
                 car.removeElement();
             }
         },10)
@@ -118,30 +148,35 @@ class Game{
     //1c3
     Animation1c3(car){
         var toggle=false;
+        var toggle2=false;
         var angle=-90;
         var moveLittleCounter=0;
         var intervalSets=false;
 
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
             if((car.position.left>Ui.line1.offsetLeft||car.light.isRed==false)&&car.position.top>=Ui.line3.offsetTop){
+                car.isWaiting=false;
+                
+                
                 if(toggle==false){
                     toggle=true;
-                    this.lane1.shift();
-                    this.lane1.forEach((car)=>{
+                    lane[0].shift();
+                    lane[0].forEach((car)=>{
                         car.carIndex--;
                     })
+                    CrossRoad.down_left_left.push(car);
                 }
 
                 if(intervalSets==false){
                     intervalSets=true;
-                    const moveLittle=setInterval(()=>{
+                    car.interval2=setInterval(()=>{
                         if(moveLittleCounter<100){
                             car.element.style.left=car.position.left+1+'px';
                             car.getPositionHorizontal();
                             moveLittleCounter++;
                         }
                         else{
-                            clearInterval(moveLittle);
+                            clearInterval(car.interval2);
                         }
                     },10)
                 }
@@ -156,7 +191,8 @@ class Game{
                 
             }
             else if(car.position.top<=Ui.line2.offsetTop){
-                clearInterval(interval);
+                CrossRoad.down_left_left.pop();
+                clearInterval(car.interval);
                 car.removeSignPost();
                 this.Animation1c4(car);
             }
@@ -165,28 +201,28 @@ class Game{
     }
     //1c4
     Animation1c4(car){
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
             if(car.position.top>0){
                 car.element.style.top=car.position.top-1+'px';
                 car.getPositionHorizontal();
             }
             else{
-                clearInterval(interval);
+                clearInterval(car.interval);
                 car.removeElement();
             }
         },10)
     }
     //3c1
     Animation3c1(car){
-        console.log(car.carIndex);
-        console.log(this.lane3);
-        const interval=setInterval(()=>{
+        
+        car.interval=setInterval(()=>{
             if(car.position.left>Ui.line2.offsetLeft+110*car.carIndex-car.elementWidth/2){
                 car.element.style.left=car.position.left-1+'px';
                 car.getPositionHorizontal();
             }
             else if(car.carIndex==0){
-                clearInterval(interval);
+                clearInterval(car.interval);
+                car.isWaiting=true;
                 if(car.destination=='straight'){
                     this.Animation3c3(car);
                 }
@@ -202,28 +238,31 @@ class Game{
         var angle=90;
         var intervalSets=false;
         var moveLittleCounter=0;
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
             if((car.position.left<Ui.line2.offsetLeft-car.elementWidth/2||car.light.isRed==false)&&car.position.top>=Ui.line3.offsetTop-car.elementHeight/2){
+                
+                car.isWaiting=false;
+                
 
                 if(toggle==false){
                     toggle=true;
-                    this.lane3.shift();
-                    this.lane3.forEach((car)=>{
+                    lane[2].shift();
+                    lane[2].forEach((car)=>{
                         car.carIndex--;
                     })
-                    console.log(this.lane3);
+                    CrossRoad.down_right_right.push(car);
                 }
 
                 if(intervalSets==false){
                     intervalSets=true;
-                    const moveLittleInterval=setInterval(()=>{
+                    car.interval2=setInterval(()=>{
                         if(moveLittleCounter<70){
                             moveLittleCounter++;
                             car.element.style.left=car.position.left-1+'px';
                             car.getPositionHorizontal();
                         }
                         else{
-                            clearInterval(moveLittleInterval);
+                            clearInterval(car.interval2);
                         }
                     },10)
                 }
@@ -237,88 +276,99 @@ class Game{
                 }
             }
             else if(car.position.top<=Ui.line3.offsetTop){
-                clearInterval(interval);
+                CrossRoad.down_right_right.pop();
+                clearInterval(car.interval);
                 car.removeSignPost();
-                this.Animation1c4(car);//
+                this.Animation1c4(car);
             }
         },10)
     }
     //3c3
     Animation3c3(car){
         var toggle=false;
-        const interval=setInterval(()=>{
+        
+        car.interval=setInterval(()=>{
             if((car.position.left<Ui.line2.offsetLeft-car.elementWidth/2||car.light.isRed==false)&&car.position.left>=0){
 
+                
+                car.isWaiting=false;
+                
                 if(toggle==false&&car.destination=='straight'){
                     toggle=true;
-                    this.lane3.shift();
-                    this.lane3.forEach((car)=>{
+                    lane[2].shift();
+                    lane[2].forEach((car)=>{
                         car.carIndex--;
                     })
-                    console.log(this.lane3);
+                    CrossRoad.down_right_straight.push(car);
+                    setTimeout(()=>{
+                        CrossRoad.down_right_straight.pop();
+                    },3000)
                 }
+                
 
                 car.element.style.left=car.position.left-1+'px';
                 car.getPositionHorizontal();
             }
             else if(car.position.left<=car.elementWidth/2){
-                clearInterval(interval);
+                clearInterval(car.interval);
                 car.removeElement();
             }
         },10)
     }
 
     Animation2c1(car){
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
             if(car.position.top<Ui.line3.offsetTop-110*car.carIndex-Ui.line3.offsetHeight){
                 car.element.style.top=car.position.top+1+'px';
                 car.getPositionHorizontal();
             }
             else if(car.carIndex==0){
-                clearInterval(interval);
-
+                clearInterval(car.interval);
+                car.isWaiting=true;
                 if(car.destination=='left'){
                     this.Animation2c2(car);
                 }
                 if(car.destination=='right'){
                     this.Animation2c3(car);
                 }
-                
             }
         },10)
     }
     //2c2
     Animation2c2(car){
         var toggle=false;
+        var toggle2=false;
         var angle=0;
         var moveLittleCounter=0;
         var intervalSets=false;
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
             if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.street.offsetHeight-20){
+
+                car.isWaiting=false;
+                car.isOnCrossRoad=true;
+                
                 if(toggle==false){
                     toggle=true;
-                    this.lane2.shift();
-                    this.lane2.forEach((car)=>{
+                    lane[1].shift();
+                    lane[1].forEach((car)=>{
                         car.carIndex--;
                     })
+                    CrossRoad.up_left.push(car);
                 }
 
                 if(intervalSets==false){
                     intervalSets=true;
-                    const interval2=setInterval(()=>{
+                    car.interval2=setInterval(()=>{
                         if(moveLittleCounter<=150){
                             car.element.style.top=car.position.top+1+'px';
                             car.getPositionHorizontal();
                             moveLittleCounter++;
                         }
                         else{
-                            clearInterval(interval2);
+                            clearInterval(car.interval2);
                         }
                     },10)
                 }
-                
-
-
                 if(moveLittleCounter>=150){
                     car.element.style.left=car.position.left+1+'px';
                     car.element.style.top=car.position.top+1+'px';
@@ -330,7 +380,10 @@ class Game{
                 }
             }
             else if(car.position.top>Ui.line3.offsetTop){
-                clearInterval(interval);
+
+                CrossRoad.up_left.pop();
+
+                clearInterval(car.interval);
                 car.removeSignPost();
                 this.Animation1c2(car);
             }
@@ -343,28 +396,32 @@ class Game{
         var moveLittleCounter=0;
         var intervalSets=false;
 
-        const interval=setInterval(()=>{
+        car.interval=setInterval(()=>{
 
             if((car.position.top>Ui.line3.offsetTop||car.light.isRed==false)&&car.position.top<=Ui.line3.offsetTop+140){
+                car.isWaiting=false;
+                car.isOnCrossRoad=true;
+
                 if(toggle==false){
                     toggle=true;
-                    this.lane2.shift();
-                    this.lane2.forEach((car)=>{
+                    lane[1].shift();
+                    lane[1].forEach((car)=>{
                         car.carIndex--;
                     })
+                    CrossRoad.up_right.push(car);
                 }
 
                 if(intervalSets==false){
 
                     intervalSets=true;
-                    const moveLittleInterval=setInterval(()=>{
+                    car.interval2=setInterval(()=>{
                         if(moveLittleCounter<60){
                             moveLittleCounter++;
                             car.element.style.top=car.position.top+1+'px';
                             car.getPositionHorizontal();
                         }
                         else{
-                            clearInterval(moveLittleInterval);
+                            clearInterval(car.interval2);
                         }
                     },10)
                 }
@@ -379,15 +436,22 @@ class Game{
                 
             }
             else if(car.position.top>Ui.line3.offsetTop+140){
-                clearInterval(interval);
+
+                CrossRoad.up_right.pop();
+
+                clearInterval(car.interval);
                 car.removeSignPost();
                 this.Animation3c3(car);
             }
         },10)
     }
     
+    
 
 }
 
 const game=new Game();
 game.init();
+
+
+

@@ -8,5 +8,6 @@ export const Ui={
     line3:document.querySelector('[data-stop-3]'),
     line1Toggle:document.querySelector('[data-light-1-toggle]'),
     line2Toggle:document.querySelector('[data-light-2-toggle]'),
-    line3Toggle:document.querySelector('[data-light-3-toggle]')
+    line3Toggle:document.querySelector('[data-light-3-toggle]'),
+    simulationButton:document.querySelector('[data-simulation-button]')
 }

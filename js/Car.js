@@ -11,6 +11,10 @@ export class Car{
         this.carIndex=null;
         this.street=Ui.street;
         this.signpostInterval=null;
+        this.interval=null;
+        this.interval2=null;
+        this.isWaiting=false;
+        this.isOnCrossRoad=null;
         
         this.position={
             left:null,

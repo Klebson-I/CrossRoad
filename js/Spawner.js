@@ -70,21 +70,24 @@ export class Spawner{
 
         if(this.startX==='left'){
             if(carListDownLeft.length<5){
-                carListDownLeft.push(carDiv);
-                return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+                const car=new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+                carListDownLeft.push(car);
+                return car;
             }
             
         }
         if(this.startX==='right'){
             if(carListDownRight.length<5){
-                carListDownRight.push(carDiv);
-                return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+                const car=new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+                carListDownRight.push(car);
+                return car;
             }
         }
         if(this.startX===0){
             if(carListUp.length<5){
-                carListUp.push(carDiv);
-                return new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+                const car=new Car(this.startY,this.startX,this.direction,carDiv,this.lightsInfluence);
+                carListUp.push(car);
+                return car;
             }
         }
     }
