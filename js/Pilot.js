@@ -1,5 +1,5 @@
 import {CrossRoad, lane} from './CarList.js';
-import { Ui } from './UiSelectors.js';
+
 
 
 
@@ -11,7 +11,7 @@ export class Pilot{
         this.light1=light1;
         this.light2=light2;
         this.light3=light3;
-        
+        this.checkDelay=false;
     }
     
     
@@ -26,22 +26,65 @@ export class Pilot{
    
 
     checkLanes(){
+        let longestLane=this.getLaneLength();
         
+        console.log(longestLane);
+        if(typeof longestLane!='undefined'){
+            
+            switch(longestLane){
+                case 0:
+                    this.CheckDownLeftStraight();
+                    this.CheckDownLeftLeft();
+                    break;
+                case 1:
+                    
+                    this.CheckUpRight();
+                    this.CheckUpLeft();
+                    break;
+                case 2:
+                    
+                    this.CheckDownRightStraight();
+                    this.CheckDownRightRight();
+                    break;
+                default:break;
+            }
+        }
+        if(typeof longestLane=='undefined'){
+            
+            this.CheckDownLeftStraight();
+            this.CheckDownLeftLeft();
+            this.CheckDownRightStraight();
+            this.CheckDownRightRight();
+            this.CheckUpRight();
+            this.CheckUpLeft();
+        }
+    }
+
+    getLaneLength(){
+        let map=lane.map(lane=>lane.length);
+        let maxLaneNumber=map.indexOf(Math.max(...map));
+        if(Math.max(...map)>=4){
+            console.log(Math.max(...map));
+            return maxLaneNumber;
+        }
+    }
+
+    CheckDownLeftStraight(){
         if(lane[0][0]){
-            console.log('down-left-straight istnieje');
+            
             if(lane[0][0].destination=='straight'&&
             lane[0][0].startX=='left'&&
             lane[0][0].startY=='down'&&
-                lane[0][0].isWaiting==true){
-                    console.log('down-left-straight czeka');
+                lane[0][0].isWaiting==true&&
+                this.checkDelay==false){
+
+                this.setDelay();
                 var canGo=true;
                 if(CrossRoad.up_left.length!=0){
                     canGo=false;
-                    console.log('down-left-straight nie może jechać');
-                    console.log(CrossRoad.up_left);
                 }
                 if(canGo==true){
-                    console.log('down-left-straight  może jechać');
+                    
                     this.light1.changeClass();
                     setTimeout(()=>{
                         this.light1.changeClass();
@@ -49,11 +92,16 @@ export class Pilot{
                 }
             }
         }
+    }
+
+    CheckDownLeftLeft(){
         if(lane[0][0]){
             if(lane[0][0].destination=='left'&&
             lane[0][0].startX=='left'&&
             lane[0][0].startY=='down'&&
-                lane[0][0].isWaiting==true){
+                lane[0][0].isWaiting==true&&
+                this.checkDelay==false){
+                this.setDelay();
                 var canGo=true;
 
                 if(CrossRoad.down_right_right.length!=0||CrossRoad.down_right_straight.length!=0||CrossRoad.up_left.length!=0){
@@ -68,12 +116,16 @@ export class Pilot{
                 }
             }
         }
+    }
+
+    CheckDownRightStraight(){
         if(lane[2][0]){
             if(lane[2][0].destination=='straight'&&
             lane[2][0].startX=='right'&&
             lane[2][0].startY=='down'&&
-                lane[2][0].isWaiting==true){
-
+                lane[2][0].isWaiting==true&&
+                this.checkDelay==false){
+                this.setDelay();
                 var canGo=true;
 
                 if(CrossRoad.up_left.length!=0||CrossRoad.up_right.length!=0||CrossRoad.down_left_left.length!=0){
@@ -88,12 +140,16 @@ export class Pilot{
                 }
             }
         }
+    }
+    
+    CheckDownRightRight(){
         if(lane[2][0]){
             if(lane[2][0].destination=='right'&&
             lane[2][0].startX=='right'&&
             lane[2][0].startY=='down'&&
-                lane[2][0].isWaiting==true){
-
+                lane[2][0].isWaiting==true&&
+                this.checkDelay==false){
+                this.setDelay();
                 var canGo=true;
 
                 if(CrossRoad.down_left_left.length!=0){
@@ -108,10 +164,15 @@ export class Pilot{
                 }
             }
         }
+    }
+
+    CheckUpRight(){
         if(lane[1][0]){
             if(lane[1][0].destination=='right'&&
                 lane[1][0].startX==0&&
-                lane[1][0].isWaiting==true){
+                lane[1][0].isWaiting==true&&
+                this.checkDelay==false){
+                this.setDelay();
                 var canGo=true;
                 if(CrossRoad.down_right_straight.length!=0){
                     canGo=false;
@@ -124,10 +185,15 @@ export class Pilot{
                 }
             }
         }
+    }
+
+    CheckUpLeft(){
         if(lane[1][0]){
             if(lane[1][0].destination=='left'&&
                 lane[1][0].startX==0&&
-                lane[1][0].isWaiting==true){
+                lane[1][0].isWaiting==true&&
+                this.checkDelay==false){
+                this.setDelay();
                 var canGo=true;
                 if(CrossRoad.down_left_left.length!=0||CrossRoad.down_left_straight.length!=0||CrossRoad.down_right_straight.length!=0){
                     canGo=false;
@@ -140,7 +206,14 @@ export class Pilot{
                 }
             }
         }
-        
+    }
+
+    setDelay(){
+        this.checkDelay=true;
+
+        setTimeout(()=>{
+            this.checkDelay=false;
+        },5)
     }
 
     setToRed(...lights){
