@@ -19,7 +19,7 @@ body{
     
 }
 .street{
-    background-image: url('./street.png');
+    background-image: url('./images/street.png');
     width: 1024px;
     height: 678px;
     position: relative;
@@ -66,22 +66,22 @@ body{
     z-index: 2;
 }
 .lightRed{
-    background-image: url('./trafficlights-red.png');
+    background-image: url('./images/trafficlights-red.png');
 }
 .lightGreen{
-    background-image: url('./trafficlights-green.png');
+    background-image: url('./images/trafficlights-green.png');
 }
 .car{
     position: absolute;
-    background-image: url(./car.png);
+    background-image: url(./images/car.png);
     width: 56px;
     height: 100px;
 }
 .signPostRight{
-    background-image: url('./car-right.png');
+    background-image: url('./images/car-right.png');
 }
 .signPostLeft{
-    background-image: url('./car-left.png');
+    background-image: url('./images/car-left.png');
 }
 
 .down-left{

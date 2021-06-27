@@ -220,3 +220,4 @@ export class Pilot{
         lights.forEach(light=>light.changeClass());
     }
 }
+//hejka
