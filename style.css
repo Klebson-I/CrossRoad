@@ -16,12 +16,13 @@ body{
     align-items: center;
     width: 100vw;
     height: 100vh;
-    
+    min-width: 1500px;
+    min-height:800px;
 }
 .street{
     background-image: url('./images/street.png');
-    width: 1024px;
-    height: 678px;
+    min-width: 1024px;
+    min-height: 678px;
     position: relative;
     overflow: hidden;
 }
